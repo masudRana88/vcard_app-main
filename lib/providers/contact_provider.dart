@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:vcard_app/db/db_helper.dart';
 
@@ -6,11 +8,25 @@ import '../models/contact_model.dart';
 class ContactProvider extends ChangeNotifier{
 
 List<ContactModel> contactList = [];
+List<ContactModel> allFavoritItem = [];
 final db = DbHelper();
 
 
 Future<void> getContactList()async{
   contactList = await db.getAllContact();
+  notifyListeners();
+}
+
+void addFavorit(ContactModel contact){
+  allFavoritItem.add(contact);
+  notifyListeners();
+}
+void deleteFavorit(ContactModel contact){
+  allFavoritItem.remove(contact);
+  notifyListeners();
+}
+void getAllFavorit(){
+  allFavoritItem = contactList.where((cotact)=> cotact.favrite == true).toList();
   notifyListeners();
 }
 

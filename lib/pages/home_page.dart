@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vcard_app/models/contact_model.dart';
 import 'package:vcard_app/pages/contact_details_page.dart';
 import 'package:vcard_app/pages/scan_page.dart';
 import 'package:vcard_app/providers/contact_provider.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-    if(isFirstLoad){
+    if(isFirstLoad && selectedItem == 0){
       Provider.of<ContactProvider>(context,listen: false).getContactList();
       isFirstLoad = false;
     }
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("You all contact"),
+        title: Text(selectedItem == 0 ? "All Contact": "Favorite"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -53,6 +54,9 @@ class _HomePageState extends State<HomePage> {
           onTap: (index) {
             setState(() {
               selectedItem = index;
+              if(selectedItem == 1){
+                Provider.of<ContactProvider>(context,listen: false).getAllFavorit();
+              }
             });
           },
           items: const [
@@ -63,13 +67,16 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Consumer<ContactProvider>(
         builder: (context, provider, _) {
-          if(provider.contactList.isEmpty){
+          if(selectedItem == 0 && provider.contactList.isEmpty){
             return const Center(child: Text("Your contact List is Emty"),);
           }
+          if(selectedItem == 1 && provider.allFavoritItem.isEmpty){
+            return const Center(child: Text("No Favorite Contact"),);
+          }
           return ListView.builder(
-            itemCount: provider.contactList.length,
+            itemCount: selectedItem == 0 ? provider.contactList.length : provider.allFavoritItem.length,
             itemBuilder: (context, index) {
-              final contact = provider.contactList[index];
+              final contact = selectedItem == 0 ? provider.contactList[index]: provider.allFavoritItem[index];
               return Dismissible(
                 key: Key(contact.id.toString()),
                 direction: DismissDirection.endToStart,
@@ -94,6 +101,11 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(contact.favrite ? Icons.favorite : Icons.favorite_border),
                     onPressed: (){
                       provider.update(contact.copyWith(favrite: contact.favrite? false: true));
+                      if(contact.favrite){
+                        setState(() {
+                          provider.deleteFavorit(contact);
+                        });
+                      }
                   },
                     ),
                 ),
@@ -127,4 +139,7 @@ class _HomePageState extends State<HomePage> {
     ),);
 
   }
+
+
+
 }
