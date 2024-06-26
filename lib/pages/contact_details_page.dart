@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -39,7 +41,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             final contact = snapshot.data;
             return ListView(
               children: [
-                Image.asset(contact!.image, width: double.infinity, height: 250,fit: BoxFit.cover,),
+                Image.file(File(contact!.image), width: double.infinity, height: 250,fit: BoxFit.cover,),
                 ListTile(
                   title: Text(contact.name),
                 ),

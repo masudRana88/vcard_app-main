@@ -2,6 +2,7 @@ const String tbContact = "tb_contact";
 const String tbContactColId = "id";
 const String tbContactColName = "name";
 const String tbContactColMobile = "mobile";
+const String tbContactColLanLine = "lanline";
 const String tbContactColEmail = "email";
 const String tbContactColCompany = "company";
 const String tbContactColDesignation = "Designation";
@@ -14,6 +15,7 @@ class ContactModel {
   int id;
   String name;
   String mobile;
+  String lanline;
   String email;
   String company;
   String designation;
@@ -26,6 +28,7 @@ class ContactModel {
     this.id = -1,
     required this.name,
     required this.mobile,
+    this.lanline = "",
     this.email = "",
     this.company = "",
     this.designation = "",
@@ -39,6 +42,7 @@ class ContactModel {
     Map<String, dynamic> map = {
       tbContactColName: name,
       tbContactColMobile: mobile,
+      tbContactColLanLine: lanline,
       tbContactColEmail: email,
       tbContactColCompany: company,
       tbContactColDesignation: designation,
@@ -57,6 +61,7 @@ class ContactModel {
   int? id,
   String? name,
   String? mobile,
+  String? lanline,
   String? email,
   String? company,
   String? designation,
@@ -67,7 +72,8 @@ class ContactModel {
   {
     ContactModel newContact = ContactModel(
       name: name?? this.name,
-      mobile: mobile?? this.name,
+      mobile: mobile?? this.mobile,
+      lanline: lanline?? this.lanline,
       id: id?? this.id,
       email: email?? this.email,
       address: address?? this.address,
@@ -84,6 +90,7 @@ class ContactModel {
   factory ContactModel.formMap(Map<String, dynamic> map) => ContactModel(
         name: map[tbContactColName],
         mobile: map[tbContactColMobile],
+        lanline: map[tbContactColLanLine],
         id: map[tbContactColId],
         email: map[tbContactColEmail],
         company: map[tbContactColCompany],
@@ -96,6 +103,6 @@ class ContactModel {
 
   @override
   String toString() {
-    return 'ContactModel{id: $id, name: $name, mobile: $mobile, email: $email, company: $company, designation: $designation, address: $address, website: $website, favrite: $favrite, image: $image}';
+    return 'ContactModel{id: $id, name: $name, mobile: $mobile, lanline: $lanline, email: $email, company: $company, designation: $designation, address: $address, website: $website, favrite: $favrite, image: $image}';
   }
 }
